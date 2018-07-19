@@ -1,4 +1,5 @@
 import math
+import random
 
 # Configure the max number for base stat total here.
 BASE_STAT_MAX = 600
@@ -31,27 +32,65 @@ def damage_mult(attacking_move_type, attacked_pokemon_type_primary, attacked_pok
         multiplier *= type_dict[attacking_move_type][attacked_pokemon_type_secondary]
     return multiplier
 
+# Returns the damage dealt to a Pokemon by an attack
+def calculate_damage(attacking_pokemon, defending_pokemon, random=True):
+    level = attacking_pokemon.level
+    power = 60 # May update with more moves later, for now it'll be stuck to 60
+    if attacking_pokemon.damage_category == "Physical":
+        attack = attacking_pokemon.attack
+        defense = defending_pokemon.defense
+    elif attacking_pokemon.damage_category == "Special":
+        attack = attacking_pokemon.special_attack
+        defense = defending_pokemon.special_defense
+    else:
+        raise ValueError("Attacking Pokemon must be Physical or Special in damage category.")
+    # Calculate the modifier
+    # TODO: May want to add weather, criticals
+    if random:
+        random_spread = random.randint(217,255)
+        random_spread /= 255
+    else:
+        random_spread = 1
+    if attacking_pokemon.type_primary == attacking_pokemon.move_type or attacking_pokemon.type_secondary == attacking_pokemon.move_type:
+        stab = 1.5
+    else:
+        stab = 1
+    type = damage_mult(attacking_pokemon.move_type, defending_pokemon.type_primary, defending_pokemon.type_secondary)
+    multiplier = random_spread * stab * type
+    # Calculate the damage
+    damage = math.floor((((((2*level)/5) + 2) * power * attack / defense) / 50 + 2) * multiplier)
+    return damage
+
+
 # Class to abstractly represent a Pokemon
 class Pokemon:
 
-    def __init__(self, hp, attack, defense, special_attack, special_defense, speed, type_primary="Normal", type_secondary=None, move_type="Normal", damage_category="Physical"):
+    def __init__(self, hp, attack, defense, special_attack, special_defense, speed, type_primary="Normal", type_secondary=None, move_type="Normal", damage_category="Physical", level=50):
         # For fairness sake, make sure all Pokemon have a cap on max stats.
         total_stats = hp + attack + defense + special_attack + special_defense + speed
         if total_stats > BASE_STAT_MAX:
             adjustment_factor = (BASE_STAT_MAX/total_stats)
         else:
             adjustment_factor = 1
-        self.hp = math.floor(hp*adjustment_factor)
-        self.attack = math.floor(attack*adjustment_factor)
-        self.defense = math.floor(defense*adjustment_factor)
-        self.special_attack = math.floor(special_attack*adjustment_factor)
-        self.special_defense = math.floor(special_defense*adjustment_factor)
-        self.speed = math.floor(speed*adjustment_factor)
+        self.base_hp = math.floor(hp*adjustment_factor)
+        self.base_attack = math.floor(attack*adjustment_factor)
+        self.base_defense = math.floor(defense*adjustment_factor)
+        self.base_special_attack = math.floor(special_attack*adjustment_factor)
+        self.base_special_defense = math.floor(special_defense*adjustment_factor)
+        self.base_speed = math.floor(speed*adjustment_factor)
         # Set Types. Secondary type may be None
         self.type_primary = type_primary
         self.type_secondary = type_secondary
         self.move_type = move_type
         self.damage_category = damage_category
+        self.level = level
+        # Calculate stats based on level. Assume no EVs, neutral nature and perfect IVs for now.
+        self.hp = math.floor(((((2*self.base_hp) + 31) * self.level)/100) + self.level + 10)
+        self.attack = math.floor(((((2*self.base_attack) + 31) * self.level)/100) + 5)
+        self.defense = math.floor(((((2*self.base_defense) + 31) * self.level)/100) + 5)
+        self.special_attack = math.floor(((((2*self.base_special_attack) + 31) * self.level)/100) + 5)
+        self.special_defense = math.floor(((((2*self.base_special_defense) + 31) * self.level)/100) + 5)
+        self.speed = math.floor(((((2*self.base_speed) + 31) * self.level)/100) + 5)
 
     def __str__(self):
         pokemon_string = self.type_primary
