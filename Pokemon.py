@@ -33,7 +33,7 @@ def damage_mult(attacking_move_type, attacked_pokemon_type_primary, attacked_pok
     return multiplier
 
 # Returns the damage dealt to a Pokemon by an attack
-def calculate_damage(attacking_pokemon, defending_pokemon, random=True):
+def calculate_damage(attacking_pokemon, defending_pokemon, use_random=True):
     level = attacking_pokemon.level
     power = 60 # May update with more moves later, for now it'll be stuck to 60
     if attacking_pokemon.damage_category == "Physical":
@@ -46,7 +46,7 @@ def calculate_damage(attacking_pokemon, defending_pokemon, random=True):
         raise ValueError("Attacking Pokemon must be Physical or Special in damage category.")
     # Calculate the modifier
     # TODO: May want to add weather, criticals
-    if random:
+    if use_random:
         random_spread = random.randint(217,255)
         random_spread /= 255
     else:
@@ -61,6 +61,33 @@ def calculate_damage(attacking_pokemon, defending_pokemon, random=True):
     damage = math.floor((((((2*level)/5) + 2) * power * attack / defense) / 50 + 2) * multiplier)
     return damage
 
+# Returns the victorious Pokemon in a simulated battle between the two, as well as the duration of the battle. Returns a random winner if neither can effect one another
+def battle_pokemon(pokemon_one, pokemon_two, use_random=True):
+    # Decide randomly if neither can fight.
+    if damage_mult(pokemon_one.move_type, pokemon_two.type_primary, pokemon_two.type_secondary) == 0 and damage_mult(pokemon_two.move_type, pokemon_one.type_primary, pokemon_one.type_secondary) == 0:
+        if random.random() > 0.5:
+            return pokemon_one, 0
+        else:
+            return pokemon_two, 0
+    pokemon_one.current_hp = pokemon_one.hp
+    pokemon_two.current_hp = pokemon_two.hp
+    turn_num = 1
+    while True:
+        # Implemented this way to ease inclusion of Statuses and Stat changing moves in the future.
+        battle_order = []
+        battle_order.append(pokemon_one)
+        battle_order.append(pokemon_two)
+        # Sorts by highest speed first
+        battle_order.sort(key= lambda pokemon: pokemon.speed, reverse=True)
+        battle_order[1].current_hp -= calculate_damage(battle_order[0], battle_order[1], use_random)
+        if battle_order[1].current_hp <= 0:
+            del battle_order[0].__dict__["current_hp"]
+            return battle_order[0], turn_num
+        battle_order[0].current_hp -= calculate_damage(battle_order[1], battle_order[0], use_random)
+        if battle_order[0].current_hp <= 0:
+            del battle_order[1].__dict__["current_hp"]
+            return battle_order[1], turn_num
+        turn_num += 1
 
 # Class to abstractly represent a Pokemon
 class Pokemon:
@@ -92,6 +119,19 @@ class Pokemon:
         self.special_defense = math.floor(((((2*self.base_special_defense) + 31) * self.level)/100) + 5)
         self.speed = math.floor(((((2*self.base_speed) + 31) * self.level)/100) + 5)
 
+    def __repr__(self):
+        pokemon_string = self.type_primary
+        if self.type_secondary is not None:
+            pokemon_string += "/" + self.type_secondary
+        pokemon_string += " [" + self.move_type + "]"
+        pokemon_string += " [" + str(self.hp)
+        pokemon_string += "/" + str(self.attack)
+        pokemon_string += "/" + str(self.defense)
+        pokemon_string += "/" + str(self.special_attack)
+        pokemon_string += "/" + str(self.special_defense)
+        pokemon_string += "/" + str(self.speed) + "]"
+        return pokemon_string
+
     def __str__(self):
         pokemon_string = self.type_primary
         if self.type_secondary is not None:
@@ -104,3 +144,9 @@ class Pokemon:
         pokemon_string += "\nSpD: " + str(self.special_defense)
         pokemon_string += "\nSpd: " + str(self.speed)
         return pokemon_string
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.__dict__ == other.__dict__
+        else:
+            return False

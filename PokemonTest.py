@@ -87,6 +87,11 @@ class TestPokemonInit(unittest.TestCase):
 
         self.assertEqual(MewString, str(Mew))
 
+        MewString = 'Psychic [Normal] [175/120/120/120/120/120]'
+
+        self.assertEqual(MewString, repr(Mew))
+
+
     def test_all_fields(self):
         """
         Test that a Pokemon with all fields showing works as intended
@@ -113,6 +118,10 @@ class TestPokemonInit(unittest.TestCase):
         VictiniString += "\nSpd: 236"
 
         self.assertEqual(VictiniString, str(Victini))
+
+        VictiniString = 'Fire/Psychic [Fire] [341/236/236/236/236/236]'
+
+        self.assertEqual(VictiniString, repr(Victini))
 
     def test_op(self):
         """
@@ -141,6 +150,24 @@ class TestPokemonInit(unittest.TestCase):
 
         self.assertEqual(StrongoString, str(Strongo))
 
+        StrongoString = 'Fighting [Normal] [188/133/133/133/133/50]'
+
+        self.assertEqual(StrongoString, repr(Strongo))
+
+    def test_equality(self):
+        """
+        Test that Pokemon equality works as intended
+        """
+
+        pokemon_one = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fire')
+        clone = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fire')
+        pokemon_two = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fire', 'Ice')
+
+        self.assertEqual(pokemon_one, pokemon_one)
+        self.assertEqual(pokemon_one, clone)
+        self.assertNotEqual(pokemon_one, pokemon_two)
+        self.assertNotEqual(pokemon_one, "Pikachu")
+
 class TestCalculateDamage(unittest.TestCase):
     """
     Test the damage calculator function and string function from the Pokemon library
@@ -155,9 +182,9 @@ class TestCalculateDamage(unittest.TestCase):
         stab_attacker_secondary= pok.Pokemon(100, 100, 100, 100, 100, 100, 'Normal', 'Fire', move_type = 'Fire')
         defender = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Normal')
 
-        self.assertEqual(pok.calculate_damage(non_stab_attacker, defender, random=False), 28)
-        self.assertEqual(pok.calculate_damage(stab_attacker, defender, random=False), 42)
-        self.assertEqual(pok.calculate_damage(stab_attacker_secondary, defender, random=False), 42)
+        self.assertEqual(pok.calculate_damage(non_stab_attacker, defender, use_random=False), 28)
+        self.assertEqual(pok.calculate_damage(stab_attacker, defender, use_random=False), 42)
+        self.assertEqual(pok.calculate_damage(stab_attacker_secondary, defender, use_random=False), 42)
 
     def test_type_effectiveness(self):
         """
@@ -171,12 +198,12 @@ class TestCalculateDamage(unittest.TestCase):
         defender_not_very_at_all = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Bug', 'Grass')
         defender_literally_none = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Flying')
 
-        self.assertEqual(pok.calculate_damage(attacker, defender_neutral, random=False), 42)
-        self.assertEqual(pok.calculate_damage(attacker, defender_super, random=False), 85)
-        self.assertEqual(pok.calculate_damage(attacker, defender_super_duper, random=False), 170)
-        self.assertEqual(pok.calculate_damage(attacker, defender_not_very, random=False), 21)
-        self.assertEqual(pok.calculate_damage(attacker, defender_not_very_at_all, random=False), 10)
-        self.assertEqual(pok.calculate_damage(attacker, defender_literally_none, random=False), 0)
+        self.assertEqual(pok.calculate_damage(attacker, defender_neutral, use_random=False), 42)
+        self.assertEqual(pok.calculate_damage(attacker, defender_super, use_random=False), 85)
+        self.assertEqual(pok.calculate_damage(attacker, defender_super_duper, use_random=False), 170)
+        self.assertEqual(pok.calculate_damage(attacker, defender_not_very, use_random=False), 21)
+        self.assertEqual(pok.calculate_damage(attacker, defender_not_very_at_all, use_random=False), 10)
+        self.assertEqual(pok.calculate_damage(attacker, defender_literally_none, use_random=False), 0)
 
     def test_physical_vs_special(self):
         """
@@ -187,14 +214,47 @@ class TestCalculateDamage(unittest.TestCase):
         attacker_na = pok.Pokemon(100, 50, 100, 150, 100, 100, 'Electric', move_type = 'Electric', damage_category='Status')
         defender = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Normal')
 
-        self.assertEqual(pok.calculate_damage(attacker_p, defender, random=False), 26)
-        self.assertEqual(pok.calculate_damage(attacker_s, defender, random=False), 59)
+        self.assertEqual(pok.calculate_damage(attacker_p, defender, use_random=False), 26)
+        self.assertEqual(pok.calculate_damage(attacker_s, defender, use_random=False), 59)
         try:
-            self.assertEqual(pok.calculate_damage(attacker_na, defender, random=False), 0)
+            self.assertEqual(pok.calculate_damage(attacker_na, defender, use_random=False), 0)
         except ValueError as err:
             pass
 
+class TestBattlePokemon(unittest.TestCase):
+    """
+    Tests the Pokemon battle simluator function from the Pokemon library
+    """
 
+    def test_regular_battle(self):
+        """
+        Tests same Pokemon battling similar Pokemon. First attacker should win.
+        """
+        pok_1 = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Electric', move_type = 'Electric', damage_category='Physical')
+        pok_2 = pok.Pokemon(100, 100, 100, 100, 100, 99, 'Electric', move_type = 'Electric', damage_category='Physical')
+
+        self.assertEqual(pok.battle_pokemon(pok_1, pok_2, use_random=False), (pok_1, 9))
+        self.assertEqual(pok.battle_pokemon(pok_2, pok_1, use_random=False), (pok_1, 9))
+
+    def test_randomly_selected_battle(self):
+        """
+        Tests two Pokemon that cannot attack one another. Either can win, but should be on turn 0.
+        """
+        pok_1 = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Ghost', move_type = 'Ghost', damage_category='Physical')
+        pok_2 = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Normal', move_type = 'Normal', damage_category='Physical')
+
+        self.assertEqual(pok.battle_pokemon(pok_1, pok_2, use_random=False)[1], 0)
+        self.assertEqual(pok.battle_pokemon(pok_2, pok_1, use_random=False)[1], 0)
+
+    def test_one_sided_battle(self):
+        """
+        Tests two Pokemon where only one can hurt the other. Second attacker should win.
+        """
+        pok_1 = pok.Pokemon(100, 100, 100, 100, 50, 100, 'Electric', move_type = 'Electric', damage_category='Physical')
+        pok_2 = pok.Pokemon(100, 100, 100, 100, 100, 50, 'Ground', move_type = 'Ground', damage_category='Special')
+
+        self.assertEqual(pok.battle_pokemon(pok_1, pok_2), (pok_2, 2))
+        self.assertEqual(pok.battle_pokemon(pok_2, pok_1), (pok_2, 2))
 
 if __name__ == '__main__':
     unittest.main()
