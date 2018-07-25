@@ -4,6 +4,7 @@ import random
 # Configure the max number for base stat total here.
 BASE_STAT_MAX = 600
 
+
 # Chart of type weaknesses. type_dict["Water"]["Fire"] assumes water is attacking fire.
 type_dict = {"Normal": {"Normal":1, "Fire":1, "Water":1, "Electric":1, "Grass":1, "Ice":1, "Fighting":1, "Poison":1, "Ground":1, "Flying":1, "Psychic":1, "Bug":1, "Rock":0.5, "Ghost":0, "Dragon":1, "Dark":1, "Steel":0.5, "Fairy":1},
              "Fire": {"Normal":1, "Fire":0.5, "Water":0.5, "Electric":1, "Grass":2, "Ice":2, "Fighting":1, "Poison":1, "Ground":1, "Flying":1, "Psychic":1, "Bug":2, "Rock":0.5, "Ghost":1, "Dragon":0.5, "Dark":1, "Steel":2, "Fairy":1},
@@ -24,6 +25,8 @@ type_dict = {"Normal": {"Normal":1, "Fire":1, "Water":1, "Electric":1, "Grass":1
              "Steel": {"Normal":1, "Fire":0.5, "Water":0.5, "Electric":0.5, "Grass":1, "Ice":2, "Fighting":1, "Poison":1, "Ground":1, "Flying":1, "Psychic":1, "Bug":1, "Rock":2, "Ghost":1, "Dragon":1, "Dark":1, "Steel":0.5, "Fairy":1},
              "Fairy": {"Normal":1, "Fire":0.5, "Water":1, "Electric":1, "Grass":1, "Ice":1, "Fighting":2, "Poison":0.5, "Ground":1, "Flying":1, "Psychic":1, "Bug":1, "Rock":1, "Ghost":1, "Dragon":2, "Dark":2, "Steel":0.5, "Fairy":1}
              }
+
+
 
 # Returns the multiplier for damage on an attack against a Pokemon.
 def damage_mult(attacking_move_type, attacked_pokemon_type_primary, attacked_pokemon_type_secondary = None):
@@ -104,6 +107,13 @@ def breed_pokemon(father, mother):
     child = Pokemon(base_hp, base_attack, base_defense, base_special_attack, base_special_defense, base_speed, type_primary, type_secondary, move_type, damage_category)
     return child
 
+# Mutate a Pokemon at random.
+def mutate_pokemon(pokemon, mutation=None):
+"""
+    if mutation is None:
+        mutation = random.choice()
+"""
+
 # Class to abstractly represent a Pokemon
 class Pokemon:
     def __init__(self, hp, attack, defense, special_attack, special_defense, speed, type_primary="Normal", type_secondary=None, move_type="Normal", damage_category="Physical", level=50):
@@ -129,6 +139,9 @@ class Pokemon:
         self.damage_category = damage_category
         self.level = level
         # Calculate stats based on level. Assume no EVs, neutral nature and perfect IVs for now.
+        recalculate_stats(self)
+
+    def recalculate_stats(self):
         self.hp = math.floor(((((2*self.base_hp) + 31) * self.level)/100) + self.level + 10)
         self.attack = math.floor(((((2*self.base_attack) + 31) * self.level)/100) + 5)
         self.defense = math.floor(((((2*self.base_defense) + 31) * self.level)/100) + 5)
