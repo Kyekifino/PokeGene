@@ -89,9 +89,23 @@ def battle_pokemon(pokemon_one, pokemon_two, use_random=True):
             return battle_order[1], turn_num
         turn_num += 1
 
+# Create a new Pokemon with traits randomly selected from the father and mother.
+def breed_pokemon(father, mother):
+    base_hp = random.choice([father.base_hp, mother.base_hp])
+    base_attack = random.choice([father.base_attack, mother.base_attack])
+    base_defense = random.choice([father.base_defense, mother.base_defense])
+    base_special_attack = random.choice([father.base_special_attack, mother.base_special_attack])
+    base_special_defense = random.choice([father.base_special_defense, mother.base_special_defense])
+    base_speed = random.choice([father.base_speed, mother.base_speed])
+    type_primary = random.choice([father.type_primary, mother.type_primary])
+    type_secondary = random.choice([father.type_secondary, mother.type_secondary])
+    move_type = random.choice([father.move_type, mother.move_type])
+    damage_category = random.choice([father.damage_category, mother.damage_category])
+    child = Pokemon(base_hp, base_attack, base_defense, base_special_attack, base_special_defense, base_speed, type_primary, type_secondary, move_type, damage_category)
+    return child
+
 # Class to abstractly represent a Pokemon
 class Pokemon:
-
     def __init__(self, hp, attack, defense, special_attack, special_defense, speed, type_primary="Normal", type_secondary=None, move_type="Normal", damage_category="Physical", level=50):
         # For fairness sake, make sure all Pokemon have a cap on max stats.
         total_stats = hp + attack + defense + special_attack + special_defense + speed
@@ -107,7 +121,10 @@ class Pokemon:
         self.base_speed = math.floor(speed*adjustment_factor)
         # Set Types. Secondary type may be None
         self.type_primary = type_primary
-        self.type_secondary = type_secondary
+        if type_primary == type_secondary:
+            self.type_secondary = None
+        else:
+            self.type_secondary = type_secondary
         self.move_type = move_type
         self.damage_category = damage_category
         self.level = level
@@ -130,20 +147,11 @@ class Pokemon:
         pokemon_string += "/" + str(self.special_attack)
         pokemon_string += "/" + str(self.special_defense)
         pokemon_string += "/" + str(self.speed) + "]"
+        pokemon_string += " <" + self.damage_category + ">"
         return pokemon_string
 
     def __str__(self):
-        pokemon_string = self.type_primary
-        if self.type_secondary is not None:
-            pokemon_string += "/" + self.type_secondary
-        pokemon_string += " [" + self.move_type + "]"
-        pokemon_string += "\nHP: " + str(self.hp)
-        pokemon_string += "\nAtk: " + str(self.attack)
-        pokemon_string += "\nDef: " + str(self.defense)
-        pokemon_string += "\nSpA: " + str(self.special_attack)
-        pokemon_string += "\nSpD: " + str(self.special_defense)
-        pokemon_string += "\nSpd: " + str(self.speed)
-        return pokemon_string
+        return repr(self)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):

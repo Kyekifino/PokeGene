@@ -77,19 +77,9 @@ class TestPokemonInit(unittest.TestCase):
         self.assertEqual(Mew.damage_category, 'Physical')
         self.assertEqual(Mew.level, 50)
 
-        MewString = 'Psychic [Normal]'
-        MewString += "\nHP: 175"
-        MewString += "\nAtk: 120"
-        MewString += "\nDef: 120"
-        MewString += "\nSpA: 120"
-        MewString += "\nSpD: 120"
-        MewString += "\nSpd: 120"
+        MewString = 'Psychic [Normal] [175/120/120/120/120/120] <Physical>'
 
         self.assertEqual(MewString, str(Mew))
-
-        MewString = 'Psychic [Normal] [175/120/120/120/120/120]'
-
-        self.assertEqual(MewString, repr(Mew))
 
 
     def test_all_fields(self):
@@ -109,19 +99,9 @@ class TestPokemonInit(unittest.TestCase):
         self.assertEqual(Victini.damage_category, 'Special')
         self.assertEqual(Victini.level, 100)
 
-        VictiniString = 'Fire/Psychic [Fire]'
-        VictiniString += "\nHP: 341"
-        VictiniString += "\nAtk: 236"
-        VictiniString += "\nDef: 236"
-        VictiniString += "\nSpA: 236"
-        VictiniString += "\nSpD: 236"
-        VictiniString += "\nSpd: 236"
+        VictiniString = 'Fire/Psychic [Fire] [341/236/236/236/236/236] <Special>'
 
         self.assertEqual(VictiniString, str(Victini))
-
-        VictiniString = 'Fire/Psychic [Fire] [341/236/236/236/236/236]'
-
-        self.assertEqual(VictiniString, repr(Victini))
 
     def test_op(self):
         """
@@ -140,19 +120,19 @@ class TestPokemonInit(unittest.TestCase):
         self.assertEqual(Strongo.damage_category, 'Physical')
         self.assertEqual(Strongo.level, 50)
 
-        StrongoString = 'Fighting [Normal]'
-        StrongoString += "\nHP: 188"
-        StrongoString += "\nAtk: 133"
-        StrongoString += "\nDef: 133"
-        StrongoString += "\nSpA: 133"
-        StrongoString += "\nSpD: 133"
-        StrongoString += "\nSpd: 50"
+        StrongoString = 'Fighting [Normal] [188/133/133/133/133/50] <Physical>'
 
         self.assertEqual(StrongoString, str(Strongo))
 
-        StrongoString = 'Fighting [Normal] [188/133/133/133/133/50]'
+    def test_same_types(self):
+        """
+        Test that a Pokemon with the same type twice is monotype.
+        """
+        Fireflame = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fire', 'Fire', 'Fire', 'Special')
 
-        self.assertEqual(StrongoString, repr(Strongo))
+        FireflameString = 'Fire [Fire] [175/120/120/120/120/120] <Special>'
+
+        self.assertEqual(FireflameString, str(Fireflame))
 
     def test_equality(self):
         """
@@ -255,6 +235,30 @@ class TestBattlePokemon(unittest.TestCase):
 
         self.assertEqual(pok.battle_pokemon(pok_1, pok_2), (pok_2, 2))
         self.assertEqual(pok.battle_pokemon(pok_2, pok_1), (pok_2, 2))
+
+class BreedPokemon(unittest.TestCase):
+    """
+    Tests the Pokemon breeding function from the Pokemon library
+    """
+
+    def test_breed(self):
+        """
+        Tests breeding regular Pokemon regularly
+        """
+        father = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fire', 'Ice', 'Dark', 'Physical')
+        mother = pok.Pokemon(75, 75, 75, 75, 75, 75, 'Water', 'Fire', 'Grass', 'Special')
+        child = pok.breed_pokemon(father, mother)
+
+        self.assertTrue(child.base_hp == 100 or child.base_hp == 75)
+        self.assertTrue(child.base_attack == 100 or child.base_attack == 75)
+        self.assertTrue(child.base_defense == 100 or child.base_defense == 75)
+        self.assertTrue(child.base_special_attack == 100 or child.base_special_attack == 75)
+        self.assertTrue(child.base_special_defense == 100 or child.base_special_defense == 75)
+        self.assertTrue(child.base_speed == 100 or child.base_speed == 75)
+        self.assertTrue(child.type_primary == 'Fire' or child.type_primary == 'Water')
+        self.assertTrue(child.type_secondary == 'Ice' or child.type_secondary == 'Fire' or child.type_secondary is None)
+        self.assertTrue(child.move_type == 'Dark' or child.move_type == 'Grass')
+        self.assertTrue(child.damage_category == 'Physical' or child.damage_category == 'Special')
 
 if __name__ == '__main__':
     unittest.main()
