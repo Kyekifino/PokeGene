@@ -295,6 +295,25 @@ class MutatePokemon(unittest.TestCase):
         pokemon.mutate('Damage Category')
         self.assertEqual(pokemon.damage_category, 'Physical')
 
+    def test_mutate_stats(self):
+        """
+        Tests that stat mutations function as expected
+        """
+        pokemon = pok.Pokemon(100, 100, 100, 100, 100, 100)
+        pokemon.mutate('Strong')
+        self.assertEqual(pokemon.base_attack, 110)
+        self.assertEqual(pokemon.base_hp, 90)
+        pokemon.mutate('Relaxed')
+        self.assertEqual(pokemon.base_defense, 110)
+        self.assertEqual(pokemon.base_speed, 90)
+        pokemon.mutate('Rash')
+        self.assertEqual(pokemon.base_special_attack, 110)
+        self.assertEqual(pokemon.base_special_defense, 90)
+
+        pokemon_two = pok.Pokemon(90, 110, 110, 110, 90, 90)
+        self.assertEqual(pokemon, pokemon_two)
+
+
 
 if __name__ == '__main__':
     unittest.main()

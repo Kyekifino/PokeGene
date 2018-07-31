@@ -125,10 +125,7 @@ class Pokemon:
         self.base_speed = math.floor(speed*adjustment_factor)
         # Set Types. Secondary type may be None
         self.type_primary = type_primary
-        if type_primary == type_secondary:
-            self.type_secondary = None
-        else:
-            self.type_secondary = type_secondary
+        self.type_secondary = type_secondary
         self.move_type = move_type
         self.damage_category = damage_category
         self.level = level
@@ -142,12 +139,15 @@ class Pokemon:
         self.special_attack = math.floor(((((2*self.base_special_attack) + 31) * self.level)/100) + 5)
         self.special_defense = math.floor(((((2*self.base_special_defense) + 31) * self.level)/100) + 5)
         self.speed = math.floor(((((2*self.base_speed) + 31) * self.level)/100) + 5)
+        if self.type_primary == self.type_secondary:
+            self.type_secondary = None
 
     # Mutate a Pokemon at random.
     def mutate(self, mutation=None):
         if mutation is None:
             mutation = random.choice(list(Mutation.mutation_list.keys()))
         Mutation.mutation_list[mutation](self)
+        self.recalculate_stats()
 
     def __repr__(self):
         pokemon_string = self.type_primary

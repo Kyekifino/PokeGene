@@ -11,19 +11,14 @@ def mutate_stats(gained_stat, lost_stat, pokemon):
     if pokemon.__dict__[lost_stat] > 10:
         pokemon.__dict__[gained_stat] += 10
         pokemon.__dict__[lost_stat] -= 10
-        pokemon.recalculate_stats()
 
 # Changes the Primary Type of a Pokemon
 def mutate_primary_type(pokemon):
     pokemon.type_primary = random.choice(types)
-    if pokemon.type_primary == pokemon.type_secondary:
-        pokemon.type_secondary = None
 
 # Changes the Secondary Type of a Pokemon
 def mutate_secondary_type(pokemon):
     pokemon.type_secondary = random.choice(types)
-    if pokemon.type_primary == pokemon.type_secondary:
-        pokemon.type_secondary = None
 
 # Changes the Move Type of a Pokemon
 def mutate_move_type(pokemon):
