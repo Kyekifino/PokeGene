@@ -260,5 +260,41 @@ class BreedPokemon(unittest.TestCase):
         self.assertTrue(child.move_type == 'Dark' or child.move_type == 'Grass')
         self.assertTrue(child.damage_category == 'Physical' or child.damage_category == 'Special')
 
+class MutatePokemon(unittest.TestCase):
+    """
+    Tests the Pokemon mutation function from the Pokemon library
+    """
+
+    def test_mutate_once(self):
+        """
+        Tests that a new Pokemon is created
+        """
+        pokemon_one = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fake', 'Fake', 'Fake', 'Physical')
+        pokemon_two = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fake', 'Fake', 'Fake', 'Physical')
+        self.assertEqual(pokemon_one, pokemon_two)
+        pokemon_two.mutate()
+        self.assertNotEqual(pokemon_one, pokemon_two)
+
+    def test_mutate_types(self):
+        """
+        Tests that each non-stat mutation functions as expected
+        """
+        pokemon = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fake', 'Bird', 'Fake', 'Physical')
+        self.assertEqual(pokemon.type_primary, 'Fake')
+        pokemon.mutate('Primary Type')
+        self.assertNotEqual(pokemon.type_primary, 'Fake')
+        self.assertEqual(pokemon.type_secondary, 'Bird')
+        pokemon.mutate('Secondary Type')
+        self.assertNotEqual(pokemon.type_secondary, 'Bird')
+        self.assertEqual(pokemon.move_type, 'Fake')
+        pokemon.mutate('Move Type')
+        self.assertNotEqual(pokemon.move_type, 'Fake')
+        self.assertEqual(pokemon.damage_category, 'Physical')
+        pokemon.mutate('Damage Category')
+        self.assertEqual(pokemon.damage_category, 'Special')
+        pokemon.mutate('Damage Category')
+        self.assertEqual(pokemon.damage_category, 'Physical')
+
+
 if __name__ == '__main__':
     unittest.main()

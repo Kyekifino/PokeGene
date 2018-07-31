@@ -1,5 +1,6 @@
 import math
 import random
+import Mutation
 
 # Configure the max number for base stat total here.
 BASE_STAT_MAX = 600
@@ -107,13 +108,6 @@ def breed_pokemon(father, mother):
     child = Pokemon(base_hp, base_attack, base_defense, base_special_attack, base_special_defense, base_speed, type_primary, type_secondary, move_type, damage_category)
     return child
 
-# Mutate a Pokemon at random.
-def mutate_pokemon(pokemon, mutation=None):
-"""
-    if mutation is None:
-        mutation = random.choice()
-"""
-
 # Class to abstractly represent a Pokemon
 class Pokemon:
     def __init__(self, hp, attack, defense, special_attack, special_defense, speed, type_primary="Normal", type_secondary=None, move_type="Normal", damage_category="Physical", level=50):
@@ -139,7 +133,7 @@ class Pokemon:
         self.damage_category = damage_category
         self.level = level
         # Calculate stats based on level. Assume no EVs, neutral nature and perfect IVs for now.
-        recalculate_stats(self)
+        self.recalculate_stats()
 
     def recalculate_stats(self):
         self.hp = math.floor(((((2*self.base_hp) + 31) * self.level)/100) + self.level + 10)
@@ -148,6 +142,12 @@ class Pokemon:
         self.special_attack = math.floor(((((2*self.base_special_attack) + 31) * self.level)/100) + 5)
         self.special_defense = math.floor(((((2*self.base_special_defense) + 31) * self.level)/100) + 5)
         self.speed = math.floor(((((2*self.base_speed) + 31) * self.level)/100) + 5)
+
+    # Mutate a Pokemon at random.
+    def mutate(self, mutation=None):
+        if mutation is None:
+            mutation = random.choice(list(Mutation.mutation_list.keys()))
+        Mutation.mutation_list[mutation](self)
 
     def __repr__(self):
         pokemon_string = self.type_primary

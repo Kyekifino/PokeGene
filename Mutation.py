@@ -1,10 +1,40 @@
 from functools import partial
+import random
 
+# List of possible Pokemon types
+types = [
+    "Normal", "Fire", "Water", "Electric", "Grass", "Ice", "Fighting", "Poison", "Ground", "Flying", "Psychic", "Bug", "Rock", "Ghost", "Dragon", "Dark", "Steel", "Fairy"
+]
+
+# Changes the base stats of a Pokemon
 def mutate_stats(gained_stat, lost_stat, pokemon):
     if pokemon.__dict__[lost_stat] > 10:
-        pokemon.__dict__.gained_stat += 10
-        pokemon.__dict__.lost_stat -= 10
+        pokemon.__dict__[gained_stat] += 10
+        pokemon.__dict__[lost_stat] -= 10
         pokemon.recalculate_stats()
+
+# Changes the Primary Type of a Pokemon
+def mutate_primary_type(pokemon):
+    pokemon.type_primary = random.choice(types)
+    if pokemon.type_primary == pokemon.type_secondary:
+        pokemon.type_secondary = None
+
+# Changes the Secondary Type of a Pokemon
+def mutate_secondary_type(pokemon):
+    pokemon.type_secondary = random.choice(types)
+    if pokemon.type_primary == pokemon.type_secondary:
+        pokemon.type_secondary = None
+
+# Changes the Move Type of a Pokemon
+def mutate_move_type(pokemon):
+    pokemon.move_type = random.choice(types)
+
+# Changes whether a Pokemon attacks physically or specially
+def mutate_damage_category(pokemon):
+    if pokemon.damage_category == 'Physical':
+        pokemon.damage_category = 'Special'
+    elif pokemon.damage_category == 'Special':
+        pokemon.damage_category = 'Physical'
 
 # List of possible Pokemon mutations
 mutation_list = {
