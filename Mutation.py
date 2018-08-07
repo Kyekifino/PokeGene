@@ -1,10 +1,6 @@
 from functools import partial
 import random
-
-# List of possible Pokemon types
-types = [
-    "Normal", "Fire", "Water", "Electric", "Grass", "Ice", "Fighting", "Poison", "Ground", "Flying", "Psychic", "Bug", "Rock", "Ghost", "Dragon", "Dark", "Steel", "Fairy"
-]
+from Types import types
 
 # Changes the base stats of a Pokemon
 def mutate_stats(gained_stat, lost_stat, pokemon):
