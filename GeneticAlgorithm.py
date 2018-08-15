@@ -3,6 +3,7 @@ import random
 import math
 from Types import types
 from itertools import zip_longest
+import time
 
 # Shamelessly taken from the itertools recipes on https://docs.python.org/3/library/itertools.html
 def grouper(iterable, n, fillvalue=None):
@@ -52,8 +53,15 @@ def run_genetic_algorithm_step(population):
 # Just a toy example to play with for now. Noticibly solid variability in which
 # Pokemon reign after running it a few times. Try it out! The next goal is to add
 # a UI to it.
-pop = run_genetic_algorithm_step(create_new_population())
-for x in range(1000):
-    pop = run_genetic_algorithm_step(pop)
+"""
+pop = run_genetic_algorithm_step(create_new_population(26))
 for x in pop:
     print(x)
+time.sleep(5)
+while True:
+    pop = run_genetic_algorithm_step(pop)
+    print("\n\n\n")
+    for x in pop:
+        print(x)
+    time.sleep(5)
+"""
