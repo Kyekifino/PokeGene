@@ -82,12 +82,12 @@ def breed_pokemon(father, mother):
     type_secondary = random.choice([father.type_secondary, mother.type_secondary])
     move_type = random.choice([father.move_type, mother.move_type])
     damage_category = random.choice([father.damage_category, mother.damage_category])
-    child = Pokemon(base_hp, base_attack, base_defense, base_special_attack, base_special_defense, base_speed, type_primary, type_secondary, move_type, damage_category)
+    child = Pokemon(base_hp, base_attack, base_defense, base_special_attack, base_special_defense, base_speed, type_primary, type_secondary, move_type, damage_category, show_age = True)
     return child
 
 # Class to abstractly represent a Pokemon
 class Pokemon:
-    def __init__(self, hp, attack, defense, special_attack, special_defense, speed, type_primary="Normal", type_secondary=None, move_type="Normal", damage_category="Physical", level=50):
+    def __init__(self, hp, attack, defense, special_attack, special_defense, speed, type_primary="Normal", type_secondary=None, move_type="Normal", damage_category="Physical", level=50, show_age = False):
         # For fairness sake, make sure all Pokemon have a cap on max stats.
         total_stats = hp + attack + defense + special_attack + special_defense + speed
         if total_stats > BASE_STAT_MAX:
@@ -106,6 +106,8 @@ class Pokemon:
         self.move_type = move_type
         self.damage_category = damage_category
         self.level = level
+        self.show_age = show_age
+        self.age = 0
         # Calculate stats based on level. Assume no EVs, neutral nature and perfect IVs for now.
         self.recalculate_stats()
 
@@ -130,14 +132,16 @@ class Pokemon:
         pokemon_string = self.type_primary
         if self.type_secondary is not None:
             pokemon_string += "/" + self.type_secondary
-        pokemon_string += " [" + self.move_type + "]"
+        pokemon_string += " [" + self.move_type + "]\n"
         pokemon_string += " [" + str(self.hp)
         pokemon_string += "/" + str(self.attack)
         pokemon_string += "/" + str(self.defense)
         pokemon_string += "/" + str(self.special_attack)
         pokemon_string += "/" + str(self.special_defense)
-        pokemon_string += "/" + str(self.speed) + "]"
+        pokemon_string += "/" + str(self.speed) + "]\n"
         pokemon_string += " <" + self.damage_category + ">"
+        if self.show_age:
+            pokemon_string += "\n" + str(self.age) + " generations old"
         return pokemon_string
 
     def __str__(self):

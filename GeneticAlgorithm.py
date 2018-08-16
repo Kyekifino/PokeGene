@@ -23,7 +23,7 @@ def generate_random_pokemon():
     type_secondary = random.choice(types)
     move_type = random.choice(types)
     damage_category = random.choice(["Physical", "Special"])
-    pokemon = Pokemon(stats[0], stats[1], stats[2], stats[3], stats[4], stats[5], type_primary, type_secondary, move_type, damage_category)
+    pokemon = Pokemon(stats[0], stats[1], stats[2], stats[3], stats[4], stats[5], type_primary, type_secondary, move_type, damage_category, show_age = True)
     return pokemon
 
 # Create new population of some number of random Pokemon.
@@ -41,6 +41,8 @@ def run_genetic_algorithm_step(population):
     halved_population = []
     for x,y in grouper(population, 2):
         halved_population.append(battle_pokemon(x, y)[0])
+    for pokemon in halved_population:
+        pokemon.age += 1
     baby_population = []
     for father in halved_population:
         mother = random.choice(halved_population)
@@ -54,7 +56,7 @@ def run_genetic_algorithm_step(population):
 # Pokemon reign after running it a few times. Try it out! The next goal is to add
 # a UI to it.
 """
-pop = run_genetic_algorithm_step(create_new_population(26))
+pop = run_genetic_algorithm_step(create_new_population(10))
 for x in pop:
     print(x)
 time.sleep(5)
