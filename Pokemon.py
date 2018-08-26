@@ -133,13 +133,13 @@ class Pokemon:
         if self.type_secondary is not None:
             pokemon_string += "/" + self.type_secondary
         pokemon_string += " [" + self.move_type + "]\n"
-        pokemon_string += " [" + str(self.hp)
+        pokemon_string += "[" + str(self.hp)
         pokemon_string += "/" + str(self.attack)
         pokemon_string += "/" + str(self.defense)
         pokemon_string += "/" + str(self.special_attack)
         pokemon_string += "/" + str(self.special_defense)
         pokemon_string += "/" + str(self.speed) + "]\n"
-        pokemon_string += " <" + self.damage_category + ">"
+        pokemon_string += "<" + self.damage_category + ">"
         if self.show_age:
             pokemon_string += "\n" + str(self.age) + " generations old"
         return pokemon_string

@@ -1,4 +1,5 @@
 import Pokemon as pok
+import GeneticAlgorithm as gen
 import unittest
 
 class TestDamageMult(unittest.TestCase):
@@ -77,7 +78,7 @@ class TestPokemonInit(unittest.TestCase):
         self.assertEqual(Mew.damage_category, 'Physical')
         self.assertEqual(Mew.level, 50)
 
-        MewString = 'Psychic [Normal] [175/120/120/120/120/120] <Physical>'
+        MewString = 'Psychic [Normal]\n[175/120/120/120/120/120]\n<Physical>'
 
         self.assertEqual(MewString, str(Mew))
 
@@ -99,7 +100,7 @@ class TestPokemonInit(unittest.TestCase):
         self.assertEqual(Victini.damage_category, 'Special')
         self.assertEqual(Victini.level, 100)
 
-        VictiniString = 'Fire/Psychic [Fire] [341/236/236/236/236/236] <Special>'
+        VictiniString = 'Fire/Psychic [Fire]\n[341/236/236/236/236/236]\n<Special>'
 
         self.assertEqual(VictiniString, str(Victini))
 
@@ -120,7 +121,7 @@ class TestPokemonInit(unittest.TestCase):
         self.assertEqual(Strongo.damage_category, 'Physical')
         self.assertEqual(Strongo.level, 50)
 
-        StrongoString = 'Fighting [Normal] [188/133/133/133/133/50] <Physical>'
+        StrongoString = 'Fighting [Normal]\n[188/133/133/133/133/50]\n<Physical>'
 
         self.assertEqual(StrongoString, str(Strongo))
 
@@ -130,7 +131,7 @@ class TestPokemonInit(unittest.TestCase):
         """
         Fireflame = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fire', 'Fire', 'Fire', 'Special')
 
-        FireflameString = 'Fire [Fire] [175/120/120/120/120/120] <Special>'
+        FireflameString = 'Fire [Fire]\n[175/120/120/120/120/120]\n<Special>'
 
         self.assertEqual(FireflameString, str(Fireflame))
 
@@ -313,7 +314,30 @@ class MutatePokemon(unittest.TestCase):
         pokemon_two = pok.Pokemon(90, 110, 110, 110, 90, 90)
         self.assertEqual(pokemon, pokemon_two)
 
+class TestGeneticAlgorithm(unittest.TestCase):
+    """
+    Test the Genetic Algorithm functions
+    """
 
+    def test_algorithm_survival_rate(self):
+        """
+        Test that half of all Pokemon survive a step of the algorithm.
+        """
+        pop = gen.create_new_population(20)
+        self.assertEqual(len(pop), 20)
+        for pokemon in pop:
+            self.assertEqual(pokemon.age, 0)
+        pop = gen.run_genetic_algorithm_step(pop)
+        zeroes = 0
+        ones = 0
+        self.assertEqual(len(pop), 20)
+        for pokemon in pop:
+            if pokemon.age == 0:
+                zeroes += 1
+            if pokemon.age == 1:
+                ones += 1
+        self.assertEqual(zeroes, 10)
+        self.assertEqual(ones, 10)
 
 if __name__ == '__main__':
     unittest.main()
