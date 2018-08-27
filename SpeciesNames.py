@@ -1,0 +1,41 @@
+# Dictionary of name options. Each type contains a list of 20 possible prefixes in a Pokemon's name.
+prefix_dict = {"Normal": ["Me", "Pup", "Kanga", "Nor", "Ante", "Chip", "Fur", "Sap", "Ursa", "Neko", "Hound", "Pig", "Beige", "Bun", "Bov", "Lil", "Great", "Bear", "Ele", "Pure"],
+             "Fire": ["Fla", "Infer", "Confla", "Em", "Pyro", "Lumin", "Tin", "Kin", "Igni", "Ex", "Char", "Oxi", "Incan", "Com", "Bon", "Camp", "Tor", "Warm", "Fieri", "Swel"],
+             "Water": [],
+             "Electric": [],
+             "Grass": [],
+             "Ice": [],
+             "Fighting": [],
+             "Poison": [],
+             "Ground": [],
+             "Flying": [],
+             "Psychic": [],
+             "Bug": [],
+             "Rock": [],
+             "Ghost": [],
+             "Dragon": [],
+             "Dark": [],
+             "Steel": [],
+             "Fairy": []
+             }
+
+# Dictionary of name options. Each type contains a list of 20 possible suffixes in a Pokemon's name.
+prefix_dict = {"Normal": ["ow", "py", "roo", "mal", "lope", "munk", "coat", "ian", "major", "mata", "dog, "let", "tint", "ny", "ine", "peep", "dane", "claw", "phant", "clear"],
+             "Fire": ["ming", "no", "gration", "ber", "maniac", "ous", "der", "dle", "tion", "plode", "coal", "dation", "descent", "bust", "fire", "flame", "rid", "burn", "heat", "ter"],
+             "Water": [],
+             "Electric": [],
+             "Grass": [],
+             "Ice": [],
+             "Fighting": [],
+             "Poison": [],
+             "Ground": [],
+             "Flying": [],
+             "Psychic": [],
+             "Bug": [],
+             "Rock": [],
+             "Ghost": [],
+             "Dragon": [],
+             "Dark": [],
+             "Steel": [],
+             "Fairy": []
+             }
