@@ -20,13 +20,13 @@ prefix_dict = {"Normal": ["Me", "Pup", "Kanga", "Nor", "Ante", "Chip", "Fur", "S
              }
 
 # Dictionary of name options. Each type contains a list of 20 possible suffixes in a Pokemon's name.
-suffix_dict = {"Normal": ["ow", "py", "roo", "mal", "lope", "munk", "coat", "ian", "major", "mata", "dog, "let", "tint", "ny", "ine", "peep", "dane", "claw", "phant", "nign"],
+suffix_dict = {"Normal": ["ow", "py", "roo", "mal", "lope", "munk", "coat", "ian", "major", "mata", "dog", "let", "tint", "ny", "ine", "peep", "dane", "claw", "phant", "nign"],
              "Fire": ["ming", "no", "gration", "ber", "maniac", "ous", "der", "dle", "tion", "plode", "coal", "dation", "descent", "bust", "fire", "flame", "rid", "burn", "heat", "ter"],
              "Water": ["ter", "pool", "dro", "shing", "tic", "phin", "nic", "chor", "shi", "mon", "horse", "zle", "toise", "tle", "ster", "ken", "ca", "tis", "phoon", "wave"],
              "Electric": ["tage", "tric", "rent", "ode", "tor", "net", "der", "ning", "well", "tor", "cuit", "ere", "fier", "flow", "sister", "tron", "plate", "board", "decee", "er"],
              "Grass": ["esis", "est", "top", "nut", "er", "table", "works", "life", "phyll", "let", "boo", "room", "melon", "green", "tree", "whip", "wood", "al", "weed", "gle"],
              "Ice": ["zard", "ier", "zen", "fall", "lanche", "berg", "bite", "man", "tic", "ar", "ora", "whal", "guin", "genic", "ice", "cle", "frost", "ter", "zero", "erate"],
-             "Fighting": ["pion", "ate", "do", "boxer, "pler", "kwando", "bat", "tle", "ter", "about", "ive", "tary", "mo", "roic", "ple", "enge", "test", "thai", "tle", "emay"],
+             "Fighting": ["pion", "ate", "do", "boxer", "pler", "kwando", "bat", "tle", "ter", "about", "ive", "tary", "mo", "roic", "ple", "enge", "test", "thai", "tle", "emay"],
              "Poison": ["son", "mous", "pion", "bra", "dic", "cant", "ute", "bage", "toxin", "gen", "sive", "clear", "cide", "active", "hazard", "snake", "widow", "frog", "pus", "tist"],
              "Ground": ["ert", "soil", "quake", "yon", "vasse", "sand", "slide", "tonic", "doze", "cavate", "earth", "ry", "vel", "dug", "nent", "firma", "net", "ment", "ble", "dune"],
              "Flying": ["gle", "con", "chill", "nado", "cane", "ther", "row", "eon", "bird", "copter", "can", "is", "plane", "gull", "storm", "yr", "can", "too", "keet", "owl"],

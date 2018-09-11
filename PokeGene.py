@@ -87,7 +87,7 @@ def fill_canvas():
     delete_list = pokemon_canvas.grid_slaves()
     for x in delete_list:
         x.destroy()
-    pokemon_population = sorted(pokemon_population, key = lambda x : x.age)
+    pokemon_population = sorted(pokemon_population, key = lambda x : x.name)
     rows = math.ceil(len(pokemon_population) / 10)
     pokemon_info = Balloon(pokemon_canvas)
     for r in range(rows):

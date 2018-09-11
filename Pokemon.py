@@ -1,6 +1,7 @@
 import math
 import random
 import Mutation
+import Species
 from Types import types, type_dict
 
 # Configure the max number for base stat total here.
@@ -82,12 +83,27 @@ def breed_pokemon(father, mother):
     type_secondary = random.choice([father.type_secondary, mother.type_secondary])
     move_type = random.choice([father.move_type, mother.move_type])
     damage_category = random.choice([father.damage_category, mother.damage_category])
-    child = Pokemon(base_hp, base_attack, base_defense, base_special_attack, base_special_defense, base_speed, type_primary, type_secondary, move_type, damage_category, show_age = True)
+    child = Pokemon(base_hp, base_attack, base_defense, base_special_attack, base_special_defense, base_speed, type_primary, type_secondary, move_type, damage_category, show_age = True, show_name = True)
+    return child
+
+# Create a clone of the parent Pokemon
+def species_breed_pokemon(parent):
+    base_hp = parent.base_hp
+    base_attack = parent.base_attack
+    base_defense = parent.base_defense
+    base_special_attack = parent.base_special_attack
+    base_special_defense = parent.base_special_defense
+    base_speed = parent.base_speed
+    type_primary = parent.type_primary
+    type_secondary = parent.type_secondary
+    move_type = parent.move_type
+    damage_category = parent.damage_category
+    child = Pokemon(base_hp, base_attack, base_defense, base_special_attack, base_special_defense, base_speed, type_primary, type_secondary, move_type, damage_category, show_age = True, show_name = True)
     return child
 
 # Class to abstractly represent a Pokemon
 class Pokemon:
-    def __init__(self, hp, attack, defense, special_attack, special_defense, speed, type_primary="Normal", type_secondary=None, move_type="Normal", damage_category="Physical", level=50, show_age = False):
+    def __init__(self, hp, attack, defense, special_attack, special_defense, speed, type_primary="Normal", type_secondary=None, move_type="Normal", damage_category="Physical", level=50, show_age = False, show_name = False):
         # For fairness sake, make sure all Pokemon have a cap on max stats.
         total_stats = hp + attack + defense + special_attack + special_defense + speed
         if total_stats > BASE_STAT_MAX:
@@ -107,10 +123,12 @@ class Pokemon:
         self.damage_category = damage_category
         self.level = level
         self.show_age = show_age
+        self.show_name = show_name
         self.age = 0
         # Calculate stats based on level. Assume no EVs, neutral nature and perfect IVs for now.
         self.recalculate_stats()
 
+    # Calculates statistics, as well as deals with the Pokemon's species
     def recalculate_stats(self):
         self.hp = math.floor(((((2*self.base_hp) + 31) * self.level)/100) + self.level + 10)
         self.attack = math.floor(((((2*self.base_attack) + 31) * self.level)/100) + 5)
@@ -120,6 +138,16 @@ class Pokemon:
         self.speed = math.floor(((((2*self.base_speed) + 31) * self.level)/100) + 5)
         if self.type_primary == self.type_secondary:
             self.type_secondary = None
+        name_found = False
+        for name in Species.species_pokedex:
+            if Species.species_pokedex[name].isMember(self):
+                self.name = name
+                name_found = True
+        if name_found == False:
+            new_spec = Species.Species(self.base_hp, self.base_attack, self.base_defense, self.base_special_attack,
+                               self.base_special_defense, self.base_speed, self.type_primary, self.type_secondary)
+            self.name = new_spec.name
+            Species.species_pokedex[new_spec.name] = new_spec
 
     # Mutate a Pokemon at random.
     def mutate(self, mutation=None):
@@ -129,7 +157,10 @@ class Pokemon:
         self.recalculate_stats()
 
     def __repr__(self):
-        pokemon_string = self.type_primary
+        pokemon_string = ""
+        if self.show_name:
+            pokemon_string += str(self.name) + "\n"
+        pokemon_string += self.type_primary
         if self.type_secondary is not None:
             pokemon_string += "/" + self.type_secondary
         pokemon_string += " [" + self.move_type + "]\n"

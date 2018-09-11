@@ -1,4 +1,4 @@
-from Pokemon import Pokemon, battle_pokemon, breed_pokemon
+from Pokemon import Pokemon, battle_pokemon, breed_pokemon, species_breed_pokemon
 import random
 import math
 from Types import types
@@ -23,7 +23,7 @@ def generate_random_pokemon():
     type_secondary = random.choice(types)
     move_type = random.choice(types)
     damage_category = random.choice(["Physical", "Special"])
-    pokemon = Pokemon(stats[0], stats[1], stats[2], stats[3], stats[4], stats[5], type_primary, type_secondary, move_type, damage_category, show_age = True)
+    pokemon = Pokemon(stats[0], stats[1], stats[2], stats[3], stats[4], stats[5], type_primary, type_secondary, move_type, damage_category, show_age = True, show_name = True)
     return pokemon
 
 # Create new population of some number of random Pokemon.
@@ -35,7 +35,7 @@ def create_new_population(size = 100):
 # Tests fitness by killing the Pokemon that loses in a randomly selected battle.
 # Breeds new Pokemon from the victors.
 # Mutates these new Pokemon before adding them to the final population.
-def run_genetic_algorithm_step(population):
+def run_genetic_algorithm_step(population, breed_option = "Single Species"):
     # Randomize the order of the population
     random.shuffle(population)
     halved_population = []
@@ -46,7 +46,10 @@ def run_genetic_algorithm_step(population):
     baby_population = []
     for father in halved_population:
         mother = random.choice(halved_population)
-        baby = breed_pokemon(father, mother)
+        if breed_option == "Single Species":
+            baby = species_breed_pokemon(father)
+        elif breed_option == "Interspecies":
+            baby = breed_pokemon(father, mother)
         baby.mutate()
         baby_population.append(baby)
     new_population = halved_population + baby_population

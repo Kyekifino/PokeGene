@@ -237,7 +237,7 @@ class TestBattlePokemon(unittest.TestCase):
         self.assertEqual(pok.battle_pokemon(pok_1, pok_2), (pok_2, 2))
         self.assertEqual(pok.battle_pokemon(pok_2, pok_1), (pok_2, 2))
 
-class BreedPokemon(unittest.TestCase):
+class TestBreedPokemon(unittest.TestCase):
     """
     Tests the Pokemon breeding function from the Pokemon library
     """
@@ -261,7 +261,7 @@ class BreedPokemon(unittest.TestCase):
         self.assertTrue(child.move_type == 'Dark' or child.move_type == 'Grass')
         self.assertTrue(child.damage_category == 'Physical' or child.damage_category == 'Special')
 
-class MutatePokemon(unittest.TestCase):
+class TestMutatePokemon(unittest.TestCase):
     """
     Tests the Pokemon mutation function from the Pokemon library
     """
