@@ -45,10 +45,10 @@ def run_genetic_algorithm_step(population, breed_option = "Single Species"):
         pokemon.age += 1
     baby_population = []
     for father in halved_population:
-        mother = random.choice(halved_population)
         if breed_option == "Single Species":
             baby = species_breed_pokemon(father)
         elif breed_option == "Interspecies":
+            mother = random.choice(halved_population)
             baby = breed_pokemon(father, mother)
         baby.mutate()
         baby_population.append(baby)

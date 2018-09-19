@@ -1,4 +1,5 @@
 from tkinter import *
+import tkinter.ttk as ttk
 from Pmw import Balloon
 import GeneticAlgorithm as ga
 import math
@@ -14,6 +15,12 @@ type_colors = {"Normal": '#ada594', "Fire": '#f75231', "Water": '#399cff', "Elec
              "Rock": '#bda55a', "Ghost": '#6363b5', "Dragon": '#7b63e7', "Dark": '#735a4a',
              "Steel": '#adadc6', "Fairy": '#f7b5f7'
              }
+
+# All possible breeding options:
+#   - Single Species breeds Pokemon by creating a carbon copy of the parent, preserving the species.
+#     Works similar to actual Pokemon breeding, with the parent being the mother.
+#   - Interspecies breeds two Pokemon, randomly selecting each of their base stats, types, and move styles.
+breeding_options = ["Single Species", "Interspecies"]
 
 gui = Tk() # Initialize GUI
 
@@ -52,7 +59,7 @@ def advance_generation():
     global pokemon_population
     generation_number = generation_number + 1
     generation_string.set("Generation: " + str(generation_number))
-    pokemon_population = ga.run_genetic_algorithm_step(pokemon_population)
+    pokemon_population = ga.run_genetic_algorithm_step(pokemon_population, breed_option = breeding_combo.get())
     fill_canvas()
 
 # Empty the canvas, and reset the generation number
@@ -159,6 +166,9 @@ generation_number_label = Label(menu_frame, textvariable = generation_string, bg
 generate_population_button = Button(menu_frame, text = 'Generate Random Population', bg = FG_COLOR, command = generate_population, state = NORMAL)
 next_generation_button = Button(menu_frame, text = 'Next Generation', bg = FG_COLOR, command = advance_generation, state = DISABLED)
 reset_button = Button(menu_frame, text = 'Reset', bg = FG_COLOR, command = reset_canvas, state = DISABLED)
+breeding_label = Label(menu_frame, text = 'Breeding Type', bg = BG_COLOR)
+breeding_combo = ttk.Combobox(menu_frame, values = breeding_options, state = 'readonly')
+breeding_combo.set(breeding_options[0])
 update_rate_label = Label(menu_frame, text = 'Update Rate (seconds)', bg = BG_COLOR)
 update_rate_entry = Entry(menu_frame)
 update_rate_entry.insert(0, '1')
@@ -168,6 +178,8 @@ generation_number_label.pack(side = TOP, fill = X, padx = 3, pady = 3)
 generate_population_button.pack(side = TOP, fill = X, padx = 3, pady = 3)
 next_generation_button.pack(side = TOP, fill = X, padx = 3)
 reset_button.pack(side = TOP, fill = X, padx = 3, pady = 3)
+breeding_label.pack(side = TOP, fill = X, padx = 3)
+breeding_combo.pack(side = TOP, fill = X, padx = 3)
 update_rate_label.pack(side = TOP, fill = X, padx = 3)
 update_rate_entry.pack(side = TOP, fill = X, padx = 3)
 auto_button.pack(side = TOP, fill = X, padx = 3, pady = 3)
