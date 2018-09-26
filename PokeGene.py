@@ -47,6 +47,7 @@ def generate_population():
     reset_button['state'] = NORMAL
     auto_button['state'] = NORMAL
     stop_button['state'] = DISABLED
+    breeding_combo['state'] = DISABLED
 
     global pokemon_population
     pokemon_population = ga.create_new_population()
@@ -71,6 +72,7 @@ def reset_canvas():
     global auto_button
     global stop_button
     generate_population_button['state'] = NORMAL
+    breeding_combo['state'] = NORMAL
     next_generation_button['state'] = DISABLED
     reset_button['state'] = DISABLED
     auto_button['state'] = DISABLED
