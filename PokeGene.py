@@ -22,6 +22,11 @@ type_colors = {"Normal": '#ada594', "Fire": '#f75231', "Water": '#399cff', "Elec
 #   - Interspecies breeds two Pokemon, randomly selecting each of their base stats, types, and move styles.
 breeding_options = ["Single Species", "Interspecies"]
 
+# All possible options to sort Pokemon
+sort_options = {"Name" : lambda x: x.name,
+                "Age": lambda x: -x.age,
+                "Type": lambda x: (x.type_primary, x.type_secondary if x.type_secondary is not None else "")}
+
 gui = Tk() # Initialize GUI
 
 generation_number = 0
@@ -96,7 +101,8 @@ def fill_canvas():
     delete_list = pokemon_canvas.grid_slaves()
     for x in delete_list:
         x.destroy()
-    pokemon_population = sorted(pokemon_population, key = lambda x : x.name)
+    sort_lambda = sort_options[sort_combo.get()]
+    pokemon_population.sort(key = sort_lambda)
     rows = math.ceil(len(pokemon_population) / 10)
     pokemon_info = Balloon(pokemon_canvas)
     for r in range(rows):
@@ -171,6 +177,9 @@ reset_button = Button(menu_frame, text = 'Reset', bg = FG_COLOR, command = reset
 breeding_label = Label(menu_frame, text = 'Breeding Type', bg = BG_COLOR)
 breeding_combo = ttk.Combobox(menu_frame, values = breeding_options, state = 'readonly')
 breeding_combo.set(breeding_options[0])
+sort_label = Label(menu_frame, text = 'Sort By...', bg = BG_COLOR)
+sort_combo = ttk.Combobox(menu_frame, values = list(sort_options.keys()), state = 'readonly')
+sort_combo.set(list(sort_options.keys())[0])
 update_rate_label = Label(menu_frame, text = 'Update Rate (seconds)', bg = BG_COLOR)
 update_rate_entry = Entry(menu_frame)
 update_rate_entry.insert(0, '1')
@@ -182,6 +191,9 @@ next_generation_button.pack(side = TOP, fill = X, padx = 3)
 reset_button.pack(side = TOP, fill = X, padx = 3, pady = 3)
 breeding_label.pack(side = TOP, fill = X, padx = 3)
 breeding_combo.pack(side = TOP, fill = X, padx = 3)
+sort_label.pack(side = TOP, fill = X, padx = 3)
+sort_combo.pack(side = TOP, fill = X, padx = 3)
+sort_combo.bind("<<ComboboxSelected>>", lambda _: fill_canvas()) # Sort and update the canvas when selected
 update_rate_label.pack(side = TOP, fill = X, padx = 3)
 update_rate_entry.pack(side = TOP, fill = X, padx = 3)
 auto_button.pack(side = TOP, fill = X, padx = 3, pady = 3)
