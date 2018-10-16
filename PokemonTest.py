@@ -1,5 +1,6 @@
 import Pokemon as pok
 import GeneticAlgorithm as gen
+import Species as sp
 import unittest
 
 class TestDamageMult(unittest.TestCase):
@@ -270,8 +271,8 @@ class TestMutatePokemon(unittest.TestCase):
         """
         Tests that a new Pokemon is created
         """
-        pokemon_one = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fake', 'Fake', 'Fake', 'Physical')
-        pokemon_two = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fake', 'Fake', 'Fake', 'Physical')
+        pokemon_one = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fake', 'Fake', 'Fake', 'Physical', ignore_name=True)
+        pokemon_two = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fake', 'Fake', 'Fake', 'Physical', ignore_name=True)
         self.assertEqual(pokemon_one, pokemon_two)
         pokemon_two.mutate()
         self.assertNotEqual(pokemon_one, pokemon_two)
@@ -280,7 +281,7 @@ class TestMutatePokemon(unittest.TestCase):
         """
         Tests that each non-stat mutation functions as expected
         """
-        pokemon = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fake', 'Bird', 'Fake', 'Physical')
+        pokemon = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Fake', 'Bird', 'Fake', 'Physical', ignore_name=True)
         self.assertEqual(pokemon.type_primary, 'Fake')
         pokemon.mutate('Primary Type')
         self.assertNotEqual(pokemon.type_primary, 'Fake')
@@ -338,6 +339,31 @@ class TestGeneticAlgorithm(unittest.TestCase):
                 ones += 1
         self.assertEqual(zeroes, 10)
         self.assertEqual(ones, 10)
+
+    def test_all_algorithms_work(self):
+        """
+        Test that all variations on the genetic algorithm run correctly.
+        """
+        pop = gen.create_new_population(20)
+        self.assertEqual(len(pop), 20)
+        pop = gen.run_genetic_algorithm_step(pop, breed_option="Single Species")
+        self.assertEqual(len(pop), 20)
+        pop = gen.run_genetic_algorithm_step(pop, breed_option="Interspecies")
+        self.assertEqual(len(pop), 20)
+
+class TestSpecies(unittest.TestCase):
+    """
+    Test the Species functions
+    """
+
+    def test_pokemon_name_in_species_library(self):
+        """
+        Test that the Pokemon creates a unique name, and that name is in the Pokedex.
+        """
+        pokemon = pok.Pokemon(100, 100, 100, 100, 100, 100, 'Ghost', 'Bug', 'Rock', 'Physical', show_name=True, show_age=True)
+        self.assertTrue(pokemon.name in sp.species_pokedex)
+        self.assertTrue(pokemon.name in str(pokemon))
+        self.assertTrue(str(pokemon.age) in str(pokemon))
 
 if __name__ == '__main__':
     unittest.main()

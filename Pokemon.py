@@ -103,7 +103,7 @@ def species_breed_pokemon(parent):
 
 # Class to abstractly represent a Pokemon
 class Pokemon:
-    def __init__(self, hp, attack, defense, special_attack, special_defense, speed, type_primary="Normal", type_secondary=None, move_type="Normal", damage_category="Physical", level=50, show_age = False, show_name = False):
+    def __init__(self, hp, attack, defense, special_attack, special_defense, speed, type_primary="Normal", type_secondary=None, move_type="Normal", damage_category="Physical", level=50, show_age = False, show_name = False, ignore_name=False):
         # For fairness sake, make sure all Pokemon have a cap on max stats.
         total_stats = hp + attack + defense + special_attack + special_defense + speed
         if total_stats > BASE_STAT_MAX:
@@ -124,6 +124,7 @@ class Pokemon:
         self.level = level
         self.show_age = show_age
         self.show_name = show_name
+        self.ignore_name = ignore_name
         self.age = 0
         # Calculate stats based on level. Assume no EVs, neutral nature and perfect IVs for now.
         self.recalculate_stats()
@@ -138,16 +139,19 @@ class Pokemon:
         self.speed = math.floor(((((2*self.base_speed) + 31) * self.level)/100) + 5)
         if self.type_primary == self.type_secondary:
             self.type_secondary = None
-        name_found = False
-        for name in Species.species_pokedex:
-            if Species.species_pokedex[name].isMember(self):
-                self.name = name
-                name_found = True
-        if name_found == False:
-            new_spec = Species.Species(self.base_hp, self.base_attack, self.base_defense, self.base_special_attack,
-                               self.base_special_defense, self.base_speed, self.type_primary, self.type_secondary)
-            self.name = new_spec.name
-            Species.species_pokedex[new_spec.name] = new_spec
+        if not self.ignore_name:
+            name_found = False
+            for name in Species.species_pokedex:
+                if Species.species_pokedex[name].isMember(self):
+                    self.name = name
+                    name_found = True
+            if name_found == False:
+                new_spec = Species.Species(self.base_hp, self.base_attack, self.base_defense, self.base_special_attack,
+                                   self.base_special_defense, self.base_speed, self.type_primary, self.type_secondary)
+                self.name = new_spec.name
+                Species.species_pokedex[new_spec.name] = new_spec
+        else:
+            self.name = "MissingNo"
 
     # Mutate a Pokemon at random.
     def mutate(self, mutation=None):
