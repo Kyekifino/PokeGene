@@ -104,7 +104,6 @@ def fill_canvas():
     sort_lambda = sort_options[sort_combo.get()]
     pokemon_population.sort(key = sort_lambda)
     rows = math.ceil(len(pokemon_population) / 10)
-    pokemon_info = Balloon(pokemon_canvas)
     for r in range(rows):
         for c in range(10):
             pokemon = pokemon_population[10*r + c]
@@ -168,6 +167,7 @@ population_label = Label(pokemon_frame, text = 'Current Population', bg = BG_COL
 pokemon_canvas = Frame(pokemon_frame, height = 364, width = 364, bg = FG_COLOR, bd = 2, relief = RIDGE)
 population_label.pack(side = TOP)
 pokemon_canvas.pack(side = TOP)
+pokemon_info = Balloon(pokemon_canvas)
 
 # Fill the Menu Frame
 generation_number_label = Label(menu_frame, textvariable = generation_string, bg = BG_COLOR, relief = RIDGE)
